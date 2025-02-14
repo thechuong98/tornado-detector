@@ -1,0 +1,12 @@
+torch
+numpy
+scipy
+matplotlib
+pydantic
+fastapi
+uvicorn
+onnx
+onnxruntime
+boto3
+botocore
+arm_pyart
