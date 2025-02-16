@@ -1,0 +1,235 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Tornado Detection API",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/predict": {
+            "post": {
+                "summary": "Predict",
+                "operationId": "predict_predict_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RadarData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/detect_tornado": {
+            "post": {
+                "summary": "Detect Tornado",
+                "operationId": "detect_tornado_detect_tornado_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RadarData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/components/schemas/TornadoDetection"
+                                        },
+                                        {
+                                            "type": "object"
+                                        }
+                                    ],
+                                    "title": "Response Detect Tornado Detect Tornado Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "RadarData": {
+                "properties": {
+                    "radar_station": {
+                        "type": "string",
+                        "title": "Radar Station"
+                    },
+                    "date": {
+                        "type": "string",
+                        "title": "Date"
+                    },
+                    "current_timestamp": {
+                        "type": "string",
+                        "title": "Current Timestamp"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "radar_station",
+                    "date",
+                    "current_timestamp"
+                ],
+                "title": "RadarData"
+            },
+            "TornadoDetection": {
+                "properties": {
+                    "detections": {
+                        "items": {
+                            "$ref": "#/components/schemas/TornadoPoint"
+                        },
+                        "type": "array",
+                        "title": "Detections"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "detections"
+                ],
+                "title": "TornadoDetection"
+            },
+            "TornadoPoint": {
+                "properties": {
+                    "pinpoint": {
+                        "prefixItems": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "type": "array",
+                        "maxItems": 2,
+                        "minItems": 2,
+                        "title": "Pinpoint"
+                    },
+                    "probability": {
+                        "type": "number",
+                        "title": "Probability"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "title": "Size"
+                    },
+                    "cropped_dbz": {
+                        "items": {
+                            "items": {
+                                "type": "number"
+                            },
+                            "type": "array"
+                        },
+                        "type": "array",
+                        "title": "Cropped Dbz"
+                    },
+                    "cropped_vel": {
+                        "items": {
+                            "items": {
+                                "type": "number"
+                            },
+                            "type": "array"
+                        },
+                        "type": "array",
+                        "title": "Cropped Vel"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "pinpoint",
+                    "probability",
+                    "size",
+                    "cropped_dbz",
+                    "cropped_vel"
+                ],
+                "title": "TornadoPoint"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
